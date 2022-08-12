@@ -2,14 +2,22 @@
 
 # Field Agent Client React
 
+* [x] Create a new React project with CRA (create-react-app).
 
-* [ ] Implement a full CRUD UI for agents (display, add, update, and delete).
+* [ ] Create a component to display the list of solar panels.
 
-* [ ] Implement the required client-side routes.
+* [ ] Import and use Bootstrap for styling your components.
 
-* [ ] Display a "Not Found" message if a route doesn't match one of the defined routes.
 
-* [ ] Create React components as needed to support the required client-side routes.
+
+
+
+
+* [ ] Create a form to add a solar panel.
+
+* [ ] Support deleting solar panels.
+
+* [ ] Support editing solar panels.
 
 
 
