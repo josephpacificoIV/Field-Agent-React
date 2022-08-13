@@ -29,41 +29,70 @@ const FIELD_AGENTS_DATA = [
     },
 ];
 
+// for add, dont need agent id
+const FIELD_AGENT_DEFAULT = {
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    dob: '',
+    heightInInches: 0
+};
+
 
 
 function FieldAgents() {
 
     const [fieldAgents, setFieldAgents] = useState(FIELD_AGENTS_DATA);
+    const [fieldAgent, setFieldAgent] = useState(FIELD_AGENT_DEFAULT);
 
     // define one state variable for every field 
     // initializing with empty value
     // match the names in the form
-    const [firstName, setFirstName] = useState('');
-    const [middleName, setMiddleName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [dob, setDob] = useState('');
-    const [heightInInches, setHeightInInches] = useState(0);
+    // const [firstName, setFirstName] = useState('');
+    // const [middleName, setMiddleName] = useState('');
+    // const [lastName, setLastName] = useState('');
+    // const [dob, setDob] = useState('');
+    // const [heightInInches, setHeightInInches] = useState(0);
+
+    const handleChange = (event) => {
+        // use spread, with curly brackets for OBJECT copy
+        const newFieldAgent = {...fieldAgent};
+
+        // update the value of the property that just changed.
+        // one handler to rule them all
+        // we can "index" into the object using square brackets
+        // just like we can do with arrays
+        // .name property in the HTML element, to update the .name with .value 
+        // like a map with key-value pairs 
+        // FOR CHECKBOX handlers
+        // if (event.target.type == 'checkbox') {
+        //     newFieldAgent[event.target.name] = event.target.checked
+        // } else {
+        //     newFieldAgent[event.target.name] = event.target.value;
+        // }
+        newFieldAgent[event.target.name] = event.target.value;
+
+        setFieldAgent(newFieldAgent);
+        
+
+    };
 
 
-    // TODO review object tracking
-
-
-
-    const handleFirstNameChange = (event) => {
-        setFirstName(event.target.value);
-    };
-    const handleMiddleNameChange = (event) => {
-        setMiddleName(event.target.value);
-    };
-    const handleLastNameChange = (event) => {
-        setLastName(event.target.value);
-    };
-    const handleDobChange = (event) => {
-        setDob(event.target.value);
-    };
-    const handleHeightInInchesChange = (event) => {
-        setHeightInInches(event.target.value);
-    };
+    // const handleFirstNameChange = (event) => {
+    //     setFirstName(event.target.value);
+    // };
+    // const handleMiddleNameChange = (event) => {
+    //     setMiddleName(event.target.value);
+    // };
+    // const handleLastNameChange = (event) => {
+    //     setLastName(event.target.value);
+    // };
+    // const handleDobChange = (event) => {
+    //     setDob(event.target.value);
+    // };
+    // const handleHeightInInchesChange = (event) => {
+    //     setHeightInInches(event.target.value);
+    // };
 
 
 
@@ -80,16 +109,16 @@ function FieldAgents() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        // create an object for the field agent
+        // // create an object for the field agent
 
-        const fieldAgent = {
-            // concise propert syntax
-            firstName,
-            middleName,
-            lastName,
-            dob,
-            heightInInches
-        };
+        // const fieldAgent = {
+        //     // concise propert syntax
+        //     firstName,
+        //     middleName,
+        //     lastName,
+        //     dob,
+        //     heightInInches
+        // };
 
         // assign an ID (this is temporary, API will handle)
         fieldAgent.agentId = Math.floor(Math.random() * 100000);
@@ -112,11 +141,12 @@ function FieldAgents() {
     };
 
     const resetState = () => {
-        setFirstName('');
-        setMiddleName('');
-        setLastName('');
-        setDob('');
-        setHeightInInches(0);
+        setFieldAgent(FIELD_AGENT_DEFAULT);
+        // setFirstName('');
+        // setMiddleName('');
+        // setLastName('');
+        // setDob('');
+        // setHeightInInches(0);
     };
 
 
@@ -132,33 +162,33 @@ function FieldAgents() {
                 <div className="form-group">
                     <label htmlFor="firstName">First Name:</label>
                     <input id="firstName" name="firstName" type="text" className="form-control"
-                        value={firstName} onChange={handleFirstNameChange} />
+                        value={fieldAgent.firstName} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                     <label htmlFor="middleName">Middle Name:</label>
-                    <input id="middleName" name="middleName" type="text" className="form-control" 
-                        value={middleName} onChange={handleMiddleNameChange}/>
+                    <input id="middleName" name="middleName" type="text" className="form-control"
+                        value={fieldAgent.middleName} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                     <label htmlFor="lastName">Last Name:</label>
-                    <input id="lastName" name="lastName" type="text" className="form-control" 
-                        value={lastName} onChange={handleLastNameChange}/>
+                    <input id="lastName" name="lastName" type="text" className="form-control"
+                        value={fieldAgent.lastName} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                     <label htmlFor="dob">Date of Birth:</label>
-                    <input id="dob" name="dob" type="date" className="form-control" 
-                        value={dob} onChange={handleDobChange}/>
+                    <input id="dob" name="dob" type="date" className="form-control"
+                        value={fieldAgent.dob} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                     <label htmlFor="heightInInches">Height inches:</label>
-                    <input id="heightInInches" name="heightInInches" type="number" className="form-control" 
-                        value={heightInInches} onChange={handleHeightInInchesChange}/>
+                    <input id="heightInInches" name="heightInInches" type="number" className="form-control"
+                        value={fieldAgent.heightInInches} onChange={handleChange} />
 
                 </div>
 
                 <div className="mt-4">
                     <button className="btn btn-success mr-2" type="submit">
-                        <i className="bi bi-file-earmark-check"></i> Add Solar Panel
+                        <i className="bi bi-file-earmark-check"></i> Add Field Agent
                     </button>
                     <button className="btn btn-warning" type="button" onClick={resetState}>
                         <i className="bi bi-stoplights"></i> Cancel
