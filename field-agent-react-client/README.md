@@ -8,16 +8,13 @@
 
 * [x] Import and use Bootstrap for styling your components.
 
-
-
-
-
-
 * [x] Create a form to add a solar panel.
 - prevented page refresh when the form is submitted
 
+* [x] Support deleting solar panels.
 
-* [ ] Support deleting solar panels.
+
+
 
 * [ ] Support editing solar panels.
 

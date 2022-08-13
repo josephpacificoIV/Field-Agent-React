@@ -8,7 +8,7 @@ const FIELD_AGENTS_DATA = [
         firstName: 'Hazel',
         middleName: 'A',
         lastName: 'Hazel',
-        dob: '01/01/2001',
+        dob: '2001-01-01',
         heightInInches: 50
     },
     {
@@ -16,7 +16,7 @@ const FIELD_AGENTS_DATA = [
         firstName: 'John',
         middleName: 'B',
         lastName: 'Hazel',
-        dob: '01/01/2002',
+        dob: '2002-01-01',
         heightInInches: 50
     },
     {
@@ -24,7 +24,7 @@ const FIELD_AGENTS_DATA = [
         firstName: 'Erica',
         middleName: '',
         lastName: 'Hazel',
-        dob: '01/01/2003',
+        dob: '2003-01-01',
         heightInInches: 50
     },
 ];
@@ -47,23 +47,44 @@ function FieldAgents() {
     const [fieldAgents, setFieldAgents] = useState(FIELD_AGENTS_DATA);
     const [fieldAgent, setFieldAgent] = useState(FIELD_AGENT_DEFAULT);
 
-    
+    // if id is greater than 0, we are editing
+    // if id is 0, we are adding
+    const [editFieldAgentId, setEditFieldAgentId] = useState(0);
+
+
 
     const handleChange = (event) => {
         // use spread, with curly brackets for OBJECT copy
-        const newFieldAgent = {...fieldAgent};
+        const newFieldAgent = { ...fieldAgent };
 
         newFieldAgent[event.target.name] = event.target.value;
 
         setFieldAgent(newFieldAgent);
-        
+
 
     };
 
 
 
     const handleEditAgent = (fieldAgentId) => {
-        console.log(`Editing field agent: ${fieldAgentId}`);
+
+        // Step 1
+        // update the field agent state variable to the field agent id we need to edit
+        setEditFieldAgentId(fieldAgentId);
+
+        // find the agent in the array of agents for the fieldAgentId we need to edit
+        const fieldAgent = fieldAgents.find(fieldAgent => fieldAgent.agentId === fieldAgentId);
+
+        // CREATE A COPY of the field agent to edit
+        const editFieldAgent = { ...fieldAgent };
+
+        // update the fieldAgent state variable wiht a field agent object that we need to edit
+        setFieldAgent(editFieldAgent);
+
+
+        // Step 2
+        // we want to pre-populate the form with the values when we hit edit button
+
     };
 
     const handleDeleteAgent = (fieldAgentId) => {
@@ -71,9 +92,9 @@ function FieldAgents() {
         // need to find the field agent with ID
         const fieldAgent = fieldAgents.find(fieldAgent => fieldAgent.agentId === fieldAgentId);
 
-        
-        if(window.confirm(`Delete field agent: ${fieldAgent.firstName}-${fieldAgent.lastName}?`)){
-            
+
+        if (window.confirm(`Delete field agent: ${fieldAgent.firstName}-${fieldAgent.lastName}?`)) {
+
             // create a copy of the field agents array
             // remove the agent that we need to delete
             const newFieldAgents = fieldAgents.filter(fieldAgent => fieldAgent.agentId !== fieldAgentId);
@@ -81,9 +102,8 @@ function FieldAgents() {
             // update the field agent state variable
             setFieldAgents(newFieldAgents);
 
-
         }
-        
+
 
 
     };
@@ -91,20 +111,44 @@ function FieldAgents() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        // assign an ID (this is temporary, API will handle)
-        fieldAgent.agentId = Math.floor(Math.random() * 100000);
+        if (editFieldAgentId === 0) {
+            // assign an ID (this is temporary, API will handle)
+            fieldAgent.agentId = Math.floor(Math.random() * 100000);
 
-        // create a copy of the field agent array.
-        const newFieldAgents = [...fieldAgents];
+            // create a copy of the field agent array.
+            const newFieldAgents = [...fieldAgents];
 
-        // add the new field agent
-        newFieldAgents.push(fieldAgent);
+            // add the new field agent
+            newFieldAgents.push(fieldAgent);
 
-        // this is an option to the previous two statements
-        //const newFieldAgents = [...fieldAgents, fieldAgent];
+            // this is an option to the previous two statements
+            //const newFieldAgents = [...fieldAgents, fieldAgent];
 
-        // update the field agents state variable
-        setFieldAgents(newFieldAgents);
+            // update the field agents state variable
+            setFieldAgents(newFieldAgents);
+
+        } else {
+            // assign an ID
+            fieldAgent.agentId = editFieldAgentId;
+
+            // create a copy of the field agent array.
+            const newFieldAgents = [...fieldAgents];
+
+            // to determing the index of the field agent that we are ediitng
+            const indexToUpdate = newFieldAgents.findIndex(fa => fa.agentId === editFieldAgentId);
+
+            // we need to update the field agent at that index
+            newFieldAgents[indexToUpdate] = fieldAgent;
+
+            // update the field agents state variable
+            setFieldAgents(newFieldAgents);
+
+
+
+
+        }
+
+
 
         // reset the state
         resetState();
@@ -113,7 +157,8 @@ function FieldAgents() {
 
     const resetState = () => {
         setFieldAgent(FIELD_AGENT_DEFAULT);
-    
+        setEditFieldAgentId(0);
+
     };
 
 
@@ -155,7 +200,7 @@ function FieldAgents() {
 
                 <div className="mt-4">
                     <button className="btn btn-success mr-2" type="submit">
-                        <i className="bi bi-file-earmark-check"></i> Add Field Agent
+                        <i className="bi bi-file-earmark-check"></i> {editFieldAgentId > 0 ? 'Update Field Agent' : 'Add Field Agent'}
                     </button>
                     <button className="btn btn-warning" type="button" onClick={resetState}>
                         <i className="bi bi-stoplights"></i> Cancel
