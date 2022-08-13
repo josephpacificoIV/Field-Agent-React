@@ -13,10 +13,9 @@
 
 * [x] Support deleting solar panels.
 
+* [x] Support editing solar panels.
 
-
-
-* [ ] Support editing solar panels.
+* [ ] Implement Conditional Rendering.
 
 
 
