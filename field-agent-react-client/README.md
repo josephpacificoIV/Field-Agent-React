@@ -13,7 +13,8 @@
 
 
 
-* [ ] Create a form to add a solar panel.
+* [x] Create a form to add a solar panel.
+- prevented page refresh when the form is submitted
 
 
 * [ ] Support deleting solar panels.

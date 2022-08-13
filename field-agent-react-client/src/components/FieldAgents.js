@@ -42,34 +42,17 @@ const FIELD_AGENT_DEFAULT = {
 
 function FieldAgents() {
 
+    // define our state variables
+    // we use destructuring to get the individual valus that are returned from the useState function call
     const [fieldAgents, setFieldAgents] = useState(FIELD_AGENTS_DATA);
     const [fieldAgent, setFieldAgent] = useState(FIELD_AGENT_DEFAULT);
 
-    // define one state variable for every field 
-    // initializing with empty value
-    // match the names in the form
-    // const [firstName, setFirstName] = useState('');
-    // const [middleName, setMiddleName] = useState('');
-    // const [lastName, setLastName] = useState('');
-    // const [dob, setDob] = useState('');
-    // const [heightInInches, setHeightInInches] = useState(0);
+    
 
     const handleChange = (event) => {
         // use spread, with curly brackets for OBJECT copy
         const newFieldAgent = {...fieldAgent};
 
-        // update the value of the property that just changed.
-        // one handler to rule them all
-        // we can "index" into the object using square brackets
-        // just like we can do with arrays
-        // .name property in the HTML element, to update the .name with .value 
-        // like a map with key-value pairs 
-        // FOR CHECKBOX handlers
-        // if (event.target.type == 'checkbox') {
-        //     newFieldAgent[event.target.name] = event.target.checked
-        // } else {
-        //     newFieldAgent[event.target.name] = event.target.value;
-        // }
         newFieldAgent[event.target.name] = event.target.value;
 
         setFieldAgent(newFieldAgent);
@@ -78,47 +61,35 @@ function FieldAgents() {
     };
 
 
-    // const handleFirstNameChange = (event) => {
-    //     setFirstName(event.target.value);
-    // };
-    // const handleMiddleNameChange = (event) => {
-    //     setMiddleName(event.target.value);
-    // };
-    // const handleLastNameChange = (event) => {
-    //     setLastName(event.target.value);
-    // };
-    // const handleDobChange = (event) => {
-    //     setDob(event.target.value);
-    // };
-    // const handleHeightInInchesChange = (event) => {
-    //     setHeightInInches(event.target.value);
-    // };
-
-
-
 
     const handleEditAgent = (fieldAgentId) => {
         console.log(`Editing field agent: ${fieldAgentId}`);
     };
 
     const handleDeleteAgent = (fieldAgentId) => {
-        console.log(`Deleting field agent: ${fieldAgentId}`);
+
+        // need to find the field agent with ID
+        const fieldAgent = fieldAgents.find(fieldAgent => fieldAgent.agentId === fieldAgentId);
+
+        
+        if(window.confirm(`Delete field agent: ${fieldAgent.firstName}-${fieldAgent.lastName}?`)){
+            
+            // create a copy of the field agents array
+            // remove the agent that we need to delete
+            const newFieldAgents = fieldAgents.filter(fieldAgent => fieldAgent.agentId !== fieldAgentId);
+
+            // update the field agent state variable
+            setFieldAgents(newFieldAgents);
+
+
+        }
+        
+
 
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        // // create an object for the field agent
-
-        // const fieldAgent = {
-        //     // concise propert syntax
-        //     firstName,
-        //     middleName,
-        //     lastName,
-        //     dob,
-        //     heightInInches
-        // };
 
         // assign an ID (this is temporary, API will handle)
         fieldAgent.agentId = Math.floor(Math.random() * 100000);
@@ -142,11 +113,7 @@ function FieldAgents() {
 
     const resetState = () => {
         setFieldAgent(FIELD_AGENT_DEFAULT);
-        // setFirstName('');
-        // setMiddleName('');
-        // setLastName('');
-        // setDob('');
-        // setHeightInInches(0);
+    
     };
 
 
@@ -195,15 +162,6 @@ function FieldAgents() {
                     </button>
                 </div>
             </form>
-
-
-
-
-
-
-
-
-
 
 
             <table className="table table-striped table-hover table-sm">
