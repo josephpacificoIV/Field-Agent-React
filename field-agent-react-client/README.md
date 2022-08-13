@@ -19,14 +19,14 @@
 
 * [ ] Add API interactions using fetch
 
-GET 
+* [x] GET 
 
-DELETE
+* [x] DELETE
 
 
-POST
+* [ ] POST
 
-PUT 
+* [ ] PUT 
 
 
 

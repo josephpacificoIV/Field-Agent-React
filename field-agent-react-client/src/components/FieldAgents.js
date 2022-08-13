@@ -26,18 +26,20 @@ function FieldAgents() {
     // if id is 0, we are adding
     const [editFieldAgentId, setEditFieldAgentId] = useState(0);
     const [currentView, setCurrentView] = useState('List'); // Add, Edit
+    const [errors, setErrors] = useState([]);
+
 
     useEffect(() => {
         fetch('http://localhost:8080/api/agent')
-        .then(response => {
-            if (response.status === 200) {
-                return response.json();
-            } else {
-                return Promise.reject(`Unexpected status code: ${response.status}`)
-            }
-        })
-        .then(data => setFieldAgents(data))
-        .catch(console.log);
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json();
+                } else {
+                    return Promise.reject(`Unexpected status code: ${response.status}`)
+                }
+            })
+            .then(data => setFieldAgents(data))
+            .catch(console.log);
     }, []); //for the side effect we want to run, what are the [] dependencies?
     // an empty dependency array tells to run our side effect once when the component is initally loaded. 
     // ********
@@ -88,65 +90,135 @@ function FieldAgents() {
 
         if (window.confirm(`Delete field agent: ${fieldAgent.firstName}-${fieldAgent.lastName}?`)) {
 
-            // create a copy of the field agents array
-            // remove the agent that we need to delete
-            const newFieldAgents = fieldAgents.filter(fieldAgent => fieldAgent.agentId !== fieldAgentId);
+            const init = {
+                method: 'DELETE'
+            };
 
-            // update the field agent state variable
-            setFieldAgents(newFieldAgents);
+            fetch(`http://localhost:8080/api/agent/${fieldAgentId}`, init)
+                .then(response => {
+                    if (response.status === 204) {
+
+                        // create a copy of the field agents array
+                        // remove the agent that we need to delete
+                        const newFieldAgents = fieldAgents.filter(fieldAgent => fieldAgent.agentId !== fieldAgentId);
+
+                        // update the field agent state variable
+                        setFieldAgents(newFieldAgents);
+
+                        // TODO re-fetch from the API
+
+
+                        resetState();
+                    } else {
+                        return Promise.reject(`Unexpected status code: ${response.status}`);
+                    }
+                })
+                .catch(console.log);
 
         }
-
-
-
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
         if (editFieldAgentId === 0) {
-            // assign an ID (this is temporary, API will handle)
-            fieldAgent.agentId = Math.floor(Math.random() * 100000);
-
-            // create a copy of the field agent array.
-            const newFieldAgents = [...fieldAgents];
-
-            // add the new field agent
-            newFieldAgents.push(fieldAgent);
-
-            // this is an option to the previous two statements
-            //const newFieldAgents = [...fieldAgents, fieldAgent];
-
-            // update the field agents state variable
-            setFieldAgents(newFieldAgents);
-
+            addFieldAgent();
         } else {
-            // assign an ID
-            fieldAgent.agentId = editFieldAgentId;
-
-            // create a copy of the field agent array.
-            const newFieldAgents = [...fieldAgents];
-
-            // to determing the index of the field agent that we are ediitng
-            const indexToUpdate = newFieldAgents.findIndex(fa => fa.agentId === editFieldAgentId);
-
-            // we need to update the field agent at that index
-            newFieldAgents[indexToUpdate] = fieldAgent;
-
-            // update the field agents state variable
-            setFieldAgents(newFieldAgents);
-
-
-
-
+            updateFieldAgent();
         }
-
-
 
         // reset the state
         resetState();
-
     };
+
+    const addFieldAgent = () => {
+
+        const init = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(fieldAgent)
+        };
+
+        fetch('http://localhost:8080/api/agent', init)
+            .then(response => {
+                if (response.status === 201 || response.status === 400) {
+                    return response.json();
+                } else {
+                    return Promise.reject(`Unexpected status code: ${response.status}`);
+                }
+            })
+            .then(data => {
+                if (data.agentId) {
+
+                    // on the happy path "data is an object that looks like this: "
+                    // {
+                    //     "agentId": 9,
+                    //     "firstName": "2 Claudian",
+                    //     "middleName": "C",
+                    //     "lastName": "O'Lynn",
+                    //     "dob": "1956-11-09",
+                    //     "heightInInches": 41,
+                    //     "agencies": [],
+                    //     "aliases": []
+                    //   }
+
+
+                    // create a copy of the field agent array.
+                    const newFieldAgents = [...fieldAgents];
+
+                    // add the new field agent
+                    newFieldAgents.push(data);
+
+                    // this is an option to the previous two statements
+                    //const newFieldAgents = [...fieldAgents, fieldAgent];
+
+                    // update the field agents state variable
+                    setFieldAgents(newFieldAgents);
+
+                    resetState();
+                } else {
+
+                    /*
+
+                    on the unhappy path "data" is an array that looks like this
+
+                    [
+                    "firstName is required",
+                    "lastName is required",
+                    "height must be between 36 and 96 inches"
+                    ]
+
+                    */
+
+                    setErrors(data);
+                }
+            })
+            .catch(console.log);
+
+
+    }
+
+    const updateFieldAgent = () => {
+
+
+        // assign an ID
+        fieldAgent.agentId = editFieldAgentId;
+
+        // create a copy of the field agent array.
+        const newFieldAgents = [...fieldAgents];
+
+        // to determing the index of the field agent that we are ediitng
+        const indexToUpdate = newFieldAgents.findIndex(fa => fa.agentId === editFieldAgentId);
+
+        // we need to update the field agent at that index
+        newFieldAgents[indexToUpdate] = fieldAgent;
+
+        // update the field agents state variable
+        setFieldAgents(newFieldAgents);
+
+    }
 
     const resetState = () => {
         setFieldAgent(FIELD_AGENT_DEFAULT);
