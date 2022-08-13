@@ -15,7 +15,19 @@
 
 * [x] Support editing solar panels.
 
-* [ ] Implement Conditional Rendering.
+* [x] Implement Conditional Rendering.
+
+* [ ] Add API interactions using fetch
+
+GET 
+
+DELETE
+
+
+POST
+
+PUT 
+
 
 
 

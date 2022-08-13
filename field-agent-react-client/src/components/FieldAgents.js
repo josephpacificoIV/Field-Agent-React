@@ -1,33 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 
-const FIELD_AGENTS_DATA = [
-    {
-        agentId: 1,
-        firstName: 'Hazel',
-        middleName: 'A',
-        lastName: 'Hazel',
-        dob: '2001-01-01',
-        heightInInches: 50
-    },
-    {
-        agentId: 2,
-        firstName: 'John',
-        middleName: 'B',
-        lastName: 'Hazel',
-        dob: '2002-01-01',
-        heightInInches: 50
-    },
-    {
-        agentId: 3,
-        firstName: 'Erica',
-        middleName: '',
-        lastName: 'Hazel',
-        dob: '2003-01-01',
-        heightInInches: 50
-    },
-];
+
 
 // for add, dont need agent id
 const FIELD_AGENT_DEFAULT = {
@@ -44,7 +19,7 @@ function FieldAgents() {
 
     // define our state variables
     // we use destructuring to get the individual valus that are returned from the useState function call
-    const [fieldAgents, setFieldAgents] = useState(FIELD_AGENTS_DATA);
+    const [fieldAgents, setFieldAgents] = useState([]);
     const [fieldAgent, setFieldAgent] = useState(FIELD_AGENT_DEFAULT);
 
     // if id is greater than 0, we are editing
@@ -52,7 +27,20 @@ function FieldAgents() {
     const [editFieldAgentId, setEditFieldAgentId] = useState(0);
     const [currentView, setCurrentView] = useState('List'); // Add, Edit
 
-
+    useEffect(() => {
+        fetch('http://localhost:8080/api/agent')
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                return Promise.reject(`Unexpected status code: ${response.status}`)
+            }
+        })
+        .then(data => setFieldAgents(data))
+        .catch(console.log);
+    }, []); //for the side effect we want to run, what are the [] dependencies?
+    // an empty dependency array tells to run our side effect once when the component is initally loaded. 
+    // ********
 
 
     const handleChange = (event) => {
