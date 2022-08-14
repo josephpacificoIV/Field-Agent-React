@@ -94,8 +94,8 @@ function FieldAgentList() {
                             <td>{fieldAgent.heightInInches}</td>
                             <td>
                                 <div className="float-right mr-2">
-                                    <button className="btn btn-primary btn-sm mr-2" onClick={() => console.log('TODO fix me')}>
-                                        <i className="bi bi-pencil-square"></i> Edit</button>
+                                    <Link className="btn btn-primary btn-sm mr-2" to={`/fieldagents/edit/${fieldAgent.agentId}`}>
+                                        <i className="bi bi-pencil-square"></i> Edit</Link>
                                     <button className="btn btn-danger btn-sm" onClick={() => handleDeleteAgent(fieldAgent.agentId)}>
                                         <i className="bi bi-trash"></i> Delete</button>
                                 </div>

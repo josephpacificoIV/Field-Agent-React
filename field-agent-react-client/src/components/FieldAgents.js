@@ -28,7 +28,7 @@ function FieldAgents() {
     const [currentView, setCurrentView] = useState('List'); // Add, Edit
     const [errors, setErrors] = useState([]);
 
-
+    // for fetching list of field agents
     useEffect(() => {
         fetch('http://localhost:8080/api/agent')
             .then(response => {
@@ -198,7 +198,7 @@ function FieldAgents() {
             .catch(console.log);
 
 
-    }
+    };
 
     const updateFieldAgent = () => {
 
@@ -247,7 +247,7 @@ function FieldAgents() {
             .catch(console.log);
 
 
-    }
+    };
 
     const resetState = () => {
         setFieldAgent(FIELD_AGENT_DEFAULT);
