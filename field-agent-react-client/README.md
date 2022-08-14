@@ -17,20 +17,41 @@
 
 * [x] Implement Conditional Rendering.
 
-* [ ] Add API interactions using fetch
+* [x] Add API interactions using fetch
 
 * [x] GET 
 
 * [x] DELETE
-
 
 * [x] POST
     * Display errors from the API
 * [x] PUT 
 
 
-## Part 3
+## Part 3 Routing
 
+Home 
+About 
+Contact
+
+NavBar
+
+/fieldagents
+List (FieldAgentList)
+
+/fieldagents/add
+Add (FieldAgentForm)
+
+
+
+
+/fieldagents/edit/1
+Edit (FieldAgentForm)
+
+OPTIONAL /fieldagents/delete
+Delete (SolarPanelDelete)
+
+NotFound
 
 
 
