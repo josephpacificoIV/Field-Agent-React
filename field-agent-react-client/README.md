@@ -24,9 +24,14 @@
 * [x] DELETE
 
 
-* [ ] POST
+* [x] POST
+    * Display errors from the API
+* [x] PUT 
 
-* [ ] PUT 
+
+## Part 3
+
+
 
 
 

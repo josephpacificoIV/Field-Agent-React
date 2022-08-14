@@ -127,8 +127,8 @@ function FieldAgents() {
             updateFieldAgent();
         }
 
-        // reset the state
-        resetState();
+
+
     };
 
     const addFieldAgent = () => {
@@ -202,21 +202,50 @@ function FieldAgents() {
 
     const updateFieldAgent = () => {
 
-
         // assign an ID
         fieldAgent.agentId = editFieldAgentId;
 
-        // create a copy of the field agent array.
-        const newFieldAgents = [...fieldAgents];
+        const init = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(fieldAgent)
+        };
 
-        // to determing the index of the field agent that we are ediitng
-        const indexToUpdate = newFieldAgents.findIndex(fa => fa.agentId === editFieldAgentId);
+        fetch(`http://localhost:8080/api/agent/${editFieldAgentId}`, init)
+            .then(response => {
+                if (response.status === 204) {
+                    return null;
+                } else if (response.status === 400) {
+                    return response.json();
+                } else {
+                    return Promise.reject(`Unexpected status code: ${response.status}`);
+                }
+            })
+            .then(data => {
+                if (!data) {
 
-        // we need to update the field agent at that index
-        newFieldAgents[indexToUpdate] = fieldAgent;
+                    // create a copy of the field agent array.
+                    const newFieldAgents = [...fieldAgents];
 
-        // update the field agents state variable
-        setFieldAgents(newFieldAgents);
+                    // to determing the index of the field agent that we are ediitng
+                    const indexToUpdate = newFieldAgents.findIndex(fa => fa.agentId === editFieldAgentId);
+
+                    // we need to update the field agent at that index
+                    newFieldAgents[indexToUpdate] = fieldAgent;
+
+                    // update the field agents state variable
+                    setFieldAgents(newFieldAgents);
+
+
+                    resetState();
+                } else {
+                    setErrors(data);
+                }
+            })
+            .catch(console.log);
+
 
     }
 
@@ -224,6 +253,7 @@ function FieldAgents() {
         setFieldAgent(FIELD_AGENT_DEFAULT);
         setEditFieldAgentId(0);
         setCurrentView('List');
+        setErrors([]);
 
     };
 
@@ -238,6 +268,19 @@ function FieldAgents() {
             {(currentView === 'Add' || currentView === 'Edit') && (
                 <>
                     <h2 className='mb-4'>{editFieldAgentId > 0 ? 'Update Field Agent' : 'Add Field Agent'}</h2>
+
+                    {errors.length > 0 && (
+                        <div className="alert alert-danger">
+                            <p>The following errors were found:</p>
+                            <ul>
+                                {errors.map(error => (
+                                    <li key={error}>{error}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
                             <label htmlFor="firstName">First Name:</label>
